@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket</title>
+    </head>
+    <body>
+        <script>
+            function timestamp() {
+                return new Date().toLocaleString().toString().split(' ')[1];
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+            	var div = document.querySelector('div');
+                
+                var UUID = Date.now()
+                var socket = new WebSocket(`ws://${location.host}/ws/${UUID}`);
+
+                socket.onopen = function(e) {
+                	let msg = "Connected";
+
+                    socket.send(msg);
+                    div.innerHTML += `<h3 class='left'>${timestamp()} [Server] ${msg}</h3>`;
+                };
+
+                socket.onmessage = (event) => {
+                    div.innerHTML += `<h3 class='left'>${timestamp()} [Server] ${event.data}</h3>`;
+
+                    let msg = {
+                        id: UUID,
+                        message: 'pong'
+                        };
+                    socket.send(msg);
+
+                    div.innerHTML += `<h3 class='right'>{"id": "${UUID}", "message": "pong"} [Client] ${timestamp()}</h3>`;
+                };
+            });
+        </script>
+        <style>
+        	body {
+        		width: 100vw;
+        		height: 100vh;
+        		display: flex;
+                flex-direction: column;
+        		justify-content: center;
+        		align-items: center;
+                font-family: Geneva, Arial, Helvetica, sans-serif;
+        	}
+        	div {
+        		width: 80vw;
+        		height: 80vh;
+        		overflow-y: scroll;
+        		border: 1px solid;
+        		padding: 20px;
+        	}
+        	h2 {
+        		width: 100%;
+        		text-align: center;
+                margin: 0;
+        	}
+            h3 {
+                padding: 10px;
+                background: rgb(250, 250, 250);
+                box-sizing: border-box;
+            }
+        	.left {
+        		width: 100%;
+        		text-align: left;
+        	}
+        	.right {
+        		width: 100%;
+        		text-align: right;
+        	}
+        </style>
+        <h2># to test API go to <a href="/docs">this</a> address</h2>
+        <br>
+        <div>
+        	<h2>CLIENT-SERVER CHAT</h2>
+        </div>
+    </body>
+</html>

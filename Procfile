@@ -1,0 +1,1 @@
+web: gunicorn -w 4 -k uvicorn.workers.UvicornWorker app:app --ws-ping-interval=2 --ws-ping-timeout=5
